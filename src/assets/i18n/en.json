@@ -19,6 +19,25 @@
                 "NO_DATA": "No heroes found matching the search."
             },
             "HEROE-FORM": {
+                "TITLE_EDIT": "Edit Hero",
+                "TITLE_ADD": "Add New Hero",
+                "FIELD_NAME": "Hero Name",
+                "PLACEHOLDER_NAME": "E.g. SPIDERMAN",
+                "ERROR_NAME_REQUIRED": "Name is required",
+                "ERROR_NAME_MINLENGTH": "Name must be at least 2 characters",
+                "FIELD_ALIAS": "Alias",
+                "PLACEHOLDER_ALIAS": "E.g. Peter Parker",
+                "ERROR_ALIAS_REQUIRED": "Alias is required",
+                "FIELD_POWER": "Power",
+                "PLACEHOLDER_POWER": "E.g. Spider Sense",
+                "ERROR_POWER_REQUIRED": "Power type is required",
+                "FIELD_AGE": "Age",
+                "PLACEHOLDER_AGE": "E.g. 25",
+                "ERROR_AGE_REQUIRED": "Age is required",
+                "ERROR_AGE_MIN": "Age must be at least 10",
+                "ERROR_AGE_MAX": "Age must be at most 100",
+                "CANCEL": "Cancel",
+                "SAVE": "Save"
             }
         }
     },

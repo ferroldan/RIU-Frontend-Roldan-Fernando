@@ -1,1 +1,65 @@
-<p>hero-form works!</p>
+<div class="form-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        @if (isEditMode()) {
+        {{ 'FEATURE.HEROES.HEROE-FORM.TITLE_EDIT' | translate }}
+        } @else {
+        {{ 'FEATURE.HEROES.HEROE-FORM.TITLE_ADD' | translate }}
+        }
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="heroForm" (ngSubmit)="onSubmit()" class="hero-form">
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'FEATURE.HEROES.HEROE-FORM.FIELD_NAME' | translate }}</mat-label>
+          <input matInput formControlName="name" appUppercaseInput [placeholder]="'FEATURE.HEROES.HEROE-FORM.PLACEHOLDER_NAME' | translate">
+          @if (heroForm.get('name')?.hasError('required') && heroForm.get('name')?.touched) {
+            <mat-error>{{ 'FEATURE.HEROES.HEROE-FORM.ERROR_NAME_REQUIRED' | translate }}</mat-error>
+          }
+          @if (heroForm.get('name')?.hasError('minlength') && heroForm.get('name')?.touched) {
+            <mat-error>{{ 'FEATURE.HEROES.HEROE-FORM.ERROR_NAME_MINLENGTH' | translate }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'FEATURE.HEROES.HEROE-FORM.FIELD_ALIAS' | translate }}</mat-label>
+          <input matInput formControlName="alias" [placeholder]="'FEATURE.HEROES.HEROE-FORM.PLACEHOLDER_ALIAS' | translate">
+          @if (heroForm.get('alias')?.hasError('required') && heroForm.get('alias')?.touched) {
+            <mat-error>{{ 'FEATURE.HEROES.HEROE-FORM.ERROR_ALIAS_REQUIRED' | translate }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'FEATURE.HEROES.HEROE-FORM.FIELD_POWER' | translate }}</mat-label>
+          <input matInput formControlName="power" [placeholder]="'FEATURE.HEROES.HEROE-FORM.PLACEHOLDER_POWER' | translate">
+          @if (heroForm.get('power')?.hasError('required') && heroForm.get('power')?.touched) {
+            <mat-error>{{ 'FEATURE.HEROES.HEROE-FORM.ERROR_POWER_REQUIRED' | translate }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'FEATURE.HEROES.HEROE-FORM.FIELD_AGE' | translate }}</mat-label>
+          <input matInput type="number" formControlName="age" [placeholder]="'FEATURE.HEROES.HEROE-FORM.PLACEHOLDER_AGE' | translate">
+          @if (heroForm.get('age')?.hasError('required') && heroForm.get('age')?.touched) {
+            <mat-error>{{ 'FEATURE.HEROES.HEROE-FORM.ERROR_AGE_REQUIRED' | translate }}</mat-error>
+          }
+          @if (heroForm.get('age')?.hasError('min') && heroForm.get('age')?.touched) {
+            <mat-error>{{ 'FEATURE.HEROES.HEROE-FORM.ERROR_AGE_MIN' | translate }}</mat-error>
+          }
+          @if (heroForm.get('age')?.hasError('max') && heroForm.get('age')?.touched) {
+            <mat-error>{{ 'FEATURE.HEROES.HEROE-FORM.ERROR_AGE_MAX' | translate }}</mat-error>
+          }
+        </mat-form-field>
+
+        <div class="form-actions">
+          <button mat-button type="button" (click)="onCancel()">{{ 'FEATURE.HEROES.HEROE-FORM.CANCEL' | translate }}</button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="heroForm.invalid">
+            {{ 'FEATURE.HEROES.HEROE-FORM.SAVE' | translate }}
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

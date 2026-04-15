@@ -19,6 +19,25 @@
                 "NO_DATA": "No se encontraron héroes que coincidan con la búsqueda."
             },
             "HEROE-FORM": {
+                "TITLE_EDIT": "Editar Héroe",
+                "TITLE_ADD": "Añadir Nuevo Héroe",
+                "FIELD_NAME": "Nombre del Héroe",
+                "PLACEHOLDER_NAME": "Ej. SPIDERMAN",
+                "ERROR_NAME_REQUIRED": "El nombre es obligatorio",
+                "ERROR_NAME_MINLENGTH": "El nombre debe tener al menos 2 caracteres",
+                "FIELD_ALIAS": "Alias",
+                "PLACEHOLDER_ALIAS": "Ej. Peter Parker",
+                "ERROR_ALIAS_REQUIRED": "El alias es obligatorio",
+                "FIELD_POWER": "Poder",
+                "PLACEHOLDER_POWER": "Ej. Sentido Arácnido",
+                "ERROR_POWER_REQUIRED": "El tipo de poder es obligatorio",
+                "FIELD_AGE": "Edad",
+                "PLACEHOLDER_AGE": "Ej. 25",
+                "ERROR_AGE_REQUIRED": "La edad es obligatoria",
+                "ERROR_AGE_MIN": "La edad debe ser al menos 10",
+                "ERROR_AGE_MAX": "La edad debe ser como máximo 100",
+                "CANCEL": "Cancelar",
+                "SAVE": "Guardar"
             }
         }
     },
