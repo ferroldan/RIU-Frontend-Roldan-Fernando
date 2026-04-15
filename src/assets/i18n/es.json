@@ -3,12 +3,31 @@
         "HEROES": {
             "HEROE-LIST": {
                 "TITLE": "Lista de Héroes",
-                "SEARCH": "Buscar por nombre"
+                "SEARCH": "Buscar por nombre",
+                "LABEL": "Buscador de Héroes",
+                "PLACEHOLDER": "Buscar por nombre...",
+                "ADD_BUTTON": "Añadir Héroe"
+            },
+            "HEROE-TABLE": {
+                "COLUMN_NAME": "Nombre",
+                "COLUMN_ALIAS": "Alias",
+                "COLUMN_POWER": "Poder",
+                "COLUMN_AGE": "Edad",
+                "COLUMN_ACTIONS": "Acciones",
+                "EDIT": "Editar",
+                "DELETE": "Borrar",
+                "NO_DATA": "No se encontraron héroes que coincidan con la búsqueda."
             },
             "HEROE-FORM": {
             }
         }
     },
     "SHARED": {
+        "CONFIRM_DIALOG": {
+            "TITLE": "Confirmar acción",
+            "CANCEL": "Cancelar",
+            "CONFIRM": "Confirmar",
+            "DELETE_MESSAGE": "¿Estás seguro que deseas eliminar a {{ name }}?"
+        }
     }
 }

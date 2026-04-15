@@ -1,0 +1,14 @@
+:host {
+  display: block;
+}
+
+.hero-search {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+
+  .search-input {
+    width: 60%;
+  }
+}

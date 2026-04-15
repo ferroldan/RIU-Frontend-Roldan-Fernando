@@ -1,16 +1,16 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
-import { LanguageService } from './core/services/language.service';
+import { LoadingService } from './core/services/loading/loading.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, TranslateModule],
+  imports: [RouterOutlet, MatProgressSpinnerModule],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrl: './app.scss',
+  standalone: true
 })
 export class App {
-  protected readonly title = signal('RIU-Frontend-Roldan-Fernando');
-  protected readonly languageService = inject(LanguageService);
+  readonly loadingService = inject(LoadingService);
 }
 

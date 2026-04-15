@@ -1,0 +1,10 @@
+<div class="hero-search">
+    <mat-form-field appearance="outline" class="search-input">
+    <mat-label>{{ 'FEATURE.HEROES.HEROE-LIST.LABEL' | translate }}</mat-label>
+    <input matInput [placeholder]="'FEATURE.HEROES.HEROE-LIST.PLACEHOLDER' | translate" [formControl]="searchControl">
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
+  <button mat-raised-button color="primary" (click)="addHero.emit()">
+    <mat-icon>add</mat-icon> {{ 'FEATURE.HEROES.HEROE-LIST.ADD_BUTTON' | translate }}
+  </button>
+</div>
