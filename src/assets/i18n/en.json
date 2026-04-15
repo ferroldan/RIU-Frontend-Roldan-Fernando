@@ -1,0 +1,14 @@
+{
+    "FEATURE": {
+        "HEROES": {
+            "HEROE-LIST": {
+                "TITLE": "Heroes List",
+                "SEARCH": "Search by name"
+            },
+            "HEROE-FORM": {
+            }
+        }
+    },
+    "SHARED": {
+    }
+}
