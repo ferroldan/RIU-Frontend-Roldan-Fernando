@@ -43,9 +43,14 @@ export class HeroList implements OnInit, OnDestroy {
   loadHeroes(name?: string, pageIndex: number = 0, pageSize: number = 5): void {
     this.heroService.getHeroes(name, pageIndex, pageSize)
       .pipe(takeUntil(this.destroy$))
-      .subscribe(response => {
-        this.heroes.set(response.data);
-        this.totalHeroes.set(response.total);
+      .subscribe({
+        next: (response) => {
+          this.heroes.set(response.data);
+          this.totalHeroes.set(response.total);
+        },
+        error: () => {
+          this.snackBar.open(this.translate.instant('SHARED.SNACKBAR.LOAD_ERROR'), this.translate.instant('SHARED.SNACKBAR.CLOSE'), { duration: 3000 });
+        }
       });
   }
 
