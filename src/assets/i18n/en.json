@@ -47,6 +47,15 @@
             "CANCEL": "Cancel",
             "CONFIRM": "Confirm",
             "DELETE_MESSAGE": "Are you sure you want to delete {{ name }}?"
+        },
+        "SNACKBAR": {
+            "CREATE_SUCCESS": "Hero created successfully",
+            "CREATE_ERROR": "Error creating hero",
+            "UPDATE_SUCCESS": "Hero updated successfully",
+            "UPDATE_ERROR": "Error updating hero",
+            "DELETE_SUCCESS": "Hero deleted successfully",
+            "DELETE_ERROR": "Error deleting hero",
+            "CLOSE": "Close"
         }
     }
 }

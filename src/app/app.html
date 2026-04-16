@@ -1,3 +1,10 @@
+<header class="app-header">
+  <div class="lang-switcher">
+    <button mat-button [disabled]="languageService.currentLang() === 'es'" (click)="languageService.changeLanguage('es')">ES</button>
+    <button mat-button [disabled]="languageService.currentLang() === 'en'" (click)="languageService.changeLanguage('en')">EN</button>
+  </div>
+</header>
+
 <main class="main-content">
   <router-outlet></router-outlet>
 </main>

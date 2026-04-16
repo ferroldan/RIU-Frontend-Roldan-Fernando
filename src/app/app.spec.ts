@@ -1,10 +1,16 @@
 import { TestBed } from '@angular/core/testing';
 import { App } from './app';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { of } from 'rxjs';
 
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [App],
+      imports: [App,
+        TranslateModule.forRoot({
+          loader: { provide: TranslateLoader, useValue: { getTranslation: () => of({}) } }
+        })
+      ],
     }).compileComponents();
   });
 

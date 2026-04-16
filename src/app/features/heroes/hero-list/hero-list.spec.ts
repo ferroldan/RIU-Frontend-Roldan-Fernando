@@ -7,6 +7,8 @@ import { HeroService } from '../../../core/services/hero/hero.service';
 import { Router } from '@angular/router';
 import { Hero } from '../../../shared/interfaces/hero.interface';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { throwError } from 'rxjs';
 
 describe('HeroList', () => {
   let component: HeroList;
@@ -14,6 +16,7 @@ describe('HeroList', () => {
   let mockHeroService: jasmine.SpyObj<HeroService>;
   let mockRouter: jasmine.SpyObj<Router>;
   let mockDialog: jasmine.SpyObj<MatDialog>;
+  let mockSnackBar: jasmine.SpyObj<MatSnackBar>;
 
   const mockHeroes: Hero[] = [
     { id: 1, name: 'Spiderman', alias: 'Peter Parker', power: 'spider-sense', age: 35 }
@@ -26,6 +29,7 @@ describe('HeroList', () => {
     mockRouter = jasmine.createSpyObj('Router', ['navigate']);
     mockDialog = jasmine.createSpyObj('MatDialog', ['open']);
     mockDialog.open.and.returnValue({ afterClosed: () => of(true) } as any);
+    mockSnackBar = jasmine.createSpyObj('MatSnackBar', ['open']);
 
     await TestBed.configureTestingModule({
       imports: [
@@ -37,7 +41,8 @@ describe('HeroList', () => {
       providers: [
         { provide: HeroService, useValue: mockHeroService },
         { provide: Router, useValue: mockRouter },
-        { provide: MatDialog, useValue: mockDialog }
+        { provide: MatDialog, useValue: mockDialog },
+        { provide: MatSnackBar, useValue: mockSnackBar }
       ]
     })
     .compileComponents();
@@ -84,6 +89,13 @@ describe('HeroList', () => {
     expect(mockDialog.open).toHaveBeenCalled();
     expect(mockHeroService.deleteHero).toHaveBeenCalledWith(1);
     expect(mockHeroService.getHeroes).toHaveBeenCalledTimes(2);
+    expect(mockSnackBar.open).toHaveBeenCalled();
+  });
+
+  it('should display error snackbar if delete fails', () => {
+    mockHeroService.deleteHero.and.returnValue(throwError(() => new Error('Delete failed')));
+    component.deleteHero(mockHeroes[0]);
+    expect(mockSnackBar.open).toHaveBeenCalled();
   });
 
   it('should not delete hero if dialog is cancelled', () => {

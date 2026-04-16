@@ -47,6 +47,15 @@
             "CANCEL": "Cancelar",
             "CONFIRM": "Confirmar",
             "DELETE_MESSAGE": "¿Estás seguro que deseas eliminar a {{ name }}?"
+        },
+        "SNACKBAR": {
+            "CREATE_SUCCESS": "Héroe creado exitosamente",
+            "CREATE_ERROR": "Error al crear el héroe",
+            "UPDATE_SUCCESS": "Héroe actualizado exitosamente",
+            "UPDATE_ERROR": "Error al actualizar el héroe",
+            "DELETE_SUCCESS": "Héroe eliminado exitosamente",
+            "DELETE_ERROR": "Error al eliminar el héroe",
+            "CLOSE": "Cerrar"
         }
     }
 }

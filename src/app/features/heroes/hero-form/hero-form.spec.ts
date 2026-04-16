@@ -6,12 +6,14 @@ import { HeroForm } from './hero-form';
 import { HeroService } from '../../../core/services/hero/hero.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Hero } from '../../../shared/interfaces/hero.interface';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 describe('HeroForm', () => {
   let component: HeroForm;
   let fixture: ComponentFixture<HeroForm>;
   let mockHeroService: jasmine.SpyObj<HeroService>;
   let mockRouter: jasmine.SpyObj<Router>;
+  let mockSnackBar: jasmine.SpyObj<MatSnackBar>;
   let routeId: string | null = null;
 
   const mockHero: Hero = { id: 1, name: 'testname', alias: 'testalias', power: 'testpower', age: 30 };
@@ -19,6 +21,7 @@ describe('HeroForm', () => {
   beforeEach(async () => {
     mockHeroService = jasmine.createSpyObj<HeroService>('HeroService', ['createHero', 'updateHero', 'getHeroById']);
     mockRouter = jasmine.createSpyObj<Router>('Router', ['navigate']);
+    mockSnackBar = jasmine.createSpyObj<MatSnackBar>('MatSnackBar', ['open']);
 
     await TestBed.configureTestingModule({
       imports: [
@@ -33,7 +36,8 @@ describe('HeroForm', () => {
         {
           provide: ActivatedRoute,
           useValue: { snapshot: { paramMap: { get: () => routeId } } }
-        }
+        },
+        { provide: MatSnackBar, useValue: mockSnackBar }
       ]
     }).compileComponents();
   });
@@ -63,6 +67,18 @@ describe('HeroForm', () => {
 
       expect(mockHeroService.createHero).toHaveBeenCalled();
       expect(mockRouter.navigate).toHaveBeenCalledWith(['/heroes']);
+      expect(mockSnackBar.open).toHaveBeenCalled();
+    });
+
+    it('should show error snackbar when createHero fails', () => {
+      component.heroForm.patchValue({ name: 'BATMAN', alias: 'Bruce', power: 'Money', age: 30 });
+      mockHeroService.createHero.and.returnValue(throwError(() => new Error('Create failed')));
+
+      component.onSubmit();
+
+      expect(mockHeroService.createHero).toHaveBeenCalled();
+      expect(mockSnackBar.open).toHaveBeenCalled();
+      expect(mockRouter.navigate).not.toHaveBeenCalled();
     });
 
     it('should not call createHero if form is invalid', () => {
@@ -101,6 +117,17 @@ describe('HeroForm', () => {
 
       expect(mockHeroService.updateHero).toHaveBeenCalledWith(13, jasmine.any(Object));
       expect(mockRouter.navigate).toHaveBeenCalledWith(['/heroes']);
+      expect(mockSnackBar.open).toHaveBeenCalled();
+    });
+
+    it('should show error snackbar when updateHero fails', () => {
+      component.heroForm.patchValue({ name: 'updated' });
+      mockHeroService.updateHero.and.returnValue(throwError(() => new Error('Update failed')));
+      
+      component.onSubmit();
+
+      expect(mockSnackBar.open).toHaveBeenCalled();
+      expect(mockRouter.navigate).not.toHaveBeenCalled();
     });
   });
 

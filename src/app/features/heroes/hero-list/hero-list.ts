@@ -10,6 +10,7 @@ import { Hero } from '../../../shared/interfaces/hero.interface';
 import { PageEvent } from '@angular/material/paginator';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog';
 import { TranslateService } from '@ngx-translate/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-hero-list',
@@ -24,6 +25,7 @@ export class HeroList implements OnInit, OnDestroy {
   private readonly heroService = inject(HeroService);
   private readonly dialog = inject(MatDialog);
   private readonly translate = inject(TranslateService);
+  private readonly snackBar = inject(MatSnackBar);
 
   readonly destroy$ = new Subject<void>();
 
@@ -74,17 +76,23 @@ export class HeroList implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe(result => {
       if (result) {
-        this.heroService.deleteHero(hero.id).pipe(takeUntil(this.destroy$)).subscribe(() => {
-          let targetPage = this.currentPageIndex();
-          const pageSize = this.currentPageSize();
-          const currentTotal = this.totalHeroes();
+        this.heroService.deleteHero(hero.id).pipe(takeUntil(this.destroy$)).subscribe({
+          next: () => {
+            let targetPage = this.currentPageIndex();
+            const pageSize = this.currentPageSize();
+            const currentTotal = this.totalHeroes();
 
-          if (currentTotal > 0 && currentTotal % pageSize === 1 && targetPage > 0) {
-            targetPage--;
-            this.currentPageIndex.set(targetPage);
+            if (currentTotal > 0 && currentTotal % pageSize === 1 && targetPage > 0) {
+              targetPage--;
+              this.currentPageIndex.set(targetPage);
+            }
+
+            this.snackBar.open(this.translate.instant('SHARED.SNACKBAR.DELETE_SUCCESS'), this.translate.instant('SHARED.SNACKBAR.CLOSE'), { duration: 3000 });
+            this.loadHeroes(this.currentSearch, targetPage, pageSize);
+          },
+          error: () => {
+            this.snackBar.open(this.translate.instant('SHARED.SNACKBAR.DELETE_ERROR'), this.translate.instant('SHARED.SNACKBAR.CLOSE'), { duration: 3000 });
           }
-
-          this.loadHeroes(this.currentSearch, targetPage, pageSize);
         });
       }
     });

@@ -9,7 +9,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
-import { TranslateModule } from '@ngx-translate/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { UppercaseInputDirective } from '../../../shared/directives/uppercase-input.directive';
 
 @Component({
@@ -34,6 +35,8 @@ export class HeroForm {
   private heroService = inject(HeroService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private snackBar = inject(MatSnackBar);
+  private translate = inject(TranslateService);
 
   private destroy$ = new Subject<boolean>();
   
@@ -74,11 +77,27 @@ export class HeroForm {
     if (this.isEditMode() && this.heroId()) {
       this.heroService.updateHero(this.heroId() as number, formValue)
         .pipe(takeUntil(this.destroy$))
-        .subscribe(() => this.router.navigate(['/heroes']));
+        .subscribe({
+          next: () => {
+            this.snackBar.open(this.translate.instant('SHARED.SNACKBAR.UPDATE_SUCCESS'), this.translate.instant('SHARED.SNACKBAR.CLOSE'), { duration: 3000 });
+            this.router.navigate(['/heroes']);
+          },
+          error: () => {
+            this.snackBar.open(this.translate.instant('SHARED.SNACKBAR.UPDATE_ERROR'), this.translate.instant('SHARED.SNACKBAR.CLOSE'), { duration: 3000 });
+          }
+        });
     } else {
       this.heroService.createHero(formValue)
         .pipe(takeUntil(this.destroy$))
-        .subscribe(() => this.router.navigate(['/heroes']));
+        .subscribe({
+          next: () => {
+            this.snackBar.open(this.translate.instant('SHARED.SNACKBAR.CREATE_SUCCESS'), this.translate.instant('SHARED.SNACKBAR.CLOSE'), { duration: 3000 });
+            this.router.navigate(['/heroes']);
+          },
+          error: () => {
+            this.snackBar.open(this.translate.instant('SHARED.SNACKBAR.CREATE_ERROR'), this.translate.instant('SHARED.SNACKBAR.CLOSE'), { duration: 3000 });
+          }
+        });
     }
   }
 
