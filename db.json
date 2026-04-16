@@ -1,0 +1,74 @@
+{
+  "heroes": [
+    {
+      "name": "SPIDERMAN",
+      "alias": "Peter Parker",
+      "power": "Sentido Arácnido",
+      "age": 24,
+      "id": 1
+    },
+    {
+      "id": 2,
+      "name": "BATMAN",
+      "alias": "Bruce Wayne",
+      "power": "Inteligencia y riqueza",
+      "age": 35
+    },
+    {
+      "id": 3,
+      "name": "SUPERMAN",
+      "alias": "Clark Kent",
+      "power": "Superfuerza y vuelo",
+      "age": 30
+    },
+    {
+      "id": 4,
+      "name": "WONDER WOMAN",
+      "alias": "Diana Prince",
+      "power": "Fuerza y combate amazónico",
+      "age": 28
+    },
+    {
+      "id": 5,
+      "name": "IRON MAN",
+      "alias": "Tony Stark",
+      "power": "Armadura tecnológica",
+      "age": 45
+    },
+    {
+      "id": 6,
+      "name": "THOR",
+      "alias": "Thor Odinson",
+      "power": "Control del rayo",
+      "age": 78
+    },
+    {
+      "id": 7,
+      "name": "CAPITAN AMERICA",
+      "alias": "Steve Rogers",
+      "power": "Superfuerza y escudo",
+      "age": 99
+    },
+    {
+      "id": 8,
+      "name": "BLACK WIDOW",
+      "alias": "Natasha Romanoff",
+      "power": "Espionaje y combate",
+      "age": 38
+    },
+    {
+      "id": 9,
+      "name": "HULK",
+      "alias": "Bruce Banner",
+      "power": "Fuerza ilimitada",
+      "age": 40
+    },
+    {
+      "id": 10,
+      "name": "FLASH",
+      "alias": "Barry Allen",
+      "power": "Velocidad extrema",
+      "age": 27
+    }
+  ]
+}

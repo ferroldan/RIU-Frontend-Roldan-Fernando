@@ -1,0 +1,14 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+table {
+  width: 100%;
+}
+
+.mat-column-name    { flex: 2; min-width: 140px; }
+.mat-column-alias   { flex: 2; min-width: 140px; }
+.mat-column-power   { flex: 2; min-width: 140px; }
+.mat-column-age     { flex: 1; min-width: 80px; max-width: 100px; }
+.mat-column-actions { flex: 0 0 120px; width: 120px; text-align: center; }

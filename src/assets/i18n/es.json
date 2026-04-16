@@ -1,0 +1,61 @@
+{
+    "FEATURE": {
+        "HEROES": {
+            "HEROE-LIST": {
+                "TITLE": "Lista de Héroes",
+                "SEARCH": "Buscar por nombre",
+                "LABEL": "Buscador de Héroes",
+                "PLACEHOLDER": "Buscar por nombre...",
+                "ADD_BUTTON": "Añadir Héroe"
+            },
+            "HEROE-TABLE": {
+                "COLUMN_NAME": "Nombre",
+                "COLUMN_ALIAS": "Alias",
+                "COLUMN_POWER": "Poder",
+                "COLUMN_AGE": "Edad",
+                "COLUMN_ACTIONS": "Acciones",
+                "EDIT": "Editar",
+                "DELETE": "Borrar",
+                "NO_DATA": "No se encontraron héroes que coincidan con la búsqueda."
+            },
+            "HEROE-FORM": {
+                "TITLE_EDIT": "Editar Héroe",
+                "TITLE_ADD": "Añadir Nuevo Héroe",
+                "FIELD_NAME": "Nombre del Héroe",
+                "PLACEHOLDER_NAME": "Ej. SPIDERMAN",
+                "ERROR_NAME_REQUIRED": "El nombre es obligatorio",
+                "ERROR_NAME_MINLENGTH": "El nombre debe tener al menos 2 caracteres",
+                "FIELD_ALIAS": "Alias",
+                "PLACEHOLDER_ALIAS": "Ej. Peter Parker",
+                "ERROR_ALIAS_REQUIRED": "El alias es obligatorio",
+                "FIELD_POWER": "Poder",
+                "PLACEHOLDER_POWER": "Ej. Sentido Arácnido",
+                "ERROR_POWER_REQUIRED": "El tipo de poder es obligatorio",
+                "FIELD_AGE": "Edad",
+                "PLACEHOLDER_AGE": "Ej. 25",
+                "ERROR_AGE_REQUIRED": "La edad es obligatoria",
+                "ERROR_AGE_MIN": "La edad debe ser al menos 10",
+                "ERROR_AGE_MAX": "La edad debe ser como máximo 100",
+                "CANCEL": "Cancelar",
+                "SAVE": "Guardar"
+            }
+        }
+    },
+    "SHARED": {
+        "CONFIRM_DIALOG": {
+            "TITLE": "Confirmar acción",
+            "CANCEL": "Cancelar",
+            "CONFIRM": "Confirmar",
+            "DELETE_MESSAGE": "¿Estás seguro que deseas eliminar a {{ name }}?"
+        },
+        "SNACKBAR": {
+            "CREATE_SUCCESS": "Héroe creado exitosamente",
+            "CREATE_ERROR": "Error al crear el héroe",
+            "UPDATE_SUCCESS": "Héroe actualizado exitosamente",
+            "UPDATE_ERROR": "Error al actualizar el héroe",
+            "DELETE_SUCCESS": "Héroe eliminado exitosamente",
+            "DELETE_ERROR": "Error al eliminar el héroe",
+            "CLOSE": "Cerrar"
+        }
+    }
+}

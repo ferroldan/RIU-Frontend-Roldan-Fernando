@@ -1,0 +1,31 @@
+.app-header {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 1rem 2rem;
+  z-index: 100;
+
+  .lang-switcher {
+    display: flex;
+    gap: 0.5rem;
+  }
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.main-content {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding: 2rem;
+}

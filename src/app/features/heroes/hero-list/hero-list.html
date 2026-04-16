@@ -1,0 +1,18 @@
+<app-hero-search
+    (searchChange)="searchHeroes($event)"
+    (addHero)="addHero()">
+</app-hero-search>
+<div class="table-container mat-elevation-z8">
+    <app-hero-table
+        [heroes]="heroes()"
+        (editHero)="editHero($event)"
+        (deleteHero)="deleteHero($event)">
+    </app-hero-table>
+    <app-pagination
+        [length]="totalHeroes()"
+        [pageSize]="currentPageSize()"
+        [pageSizeOptions]="[5, 10, 20]"
+        [pageIndex]="currentPageIndex()"
+        (pageChange)="onPageChange($event)">
+    </app-pagination>
+</div>

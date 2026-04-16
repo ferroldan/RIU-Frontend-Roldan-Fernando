@@ -1,0 +1,61 @@
+{
+    "FEATURE": {
+        "HEROES": {
+            "HEROE-LIST": {
+                "TITLE": "Heroes List",
+                "SEARCH": "Search by name",
+                "LABEL": "Hero Search",
+                "PLACEHOLDER": "Search by name...",
+                "ADD_BUTTON": "Add Hero"
+            },
+            "HEROE-TABLE": {
+                "COLUMN_NAME": "Name",
+                "COLUMN_ALIAS": "Alias",
+                "COLUMN_POWER": "Power",
+                "COLUMN_AGE": "Age",
+                "COLUMN_ACTIONS": "Actions",
+                "EDIT": "Edit",
+                "DELETE": "Delete",
+                "NO_DATA": "No heroes found matching the search."
+            },
+            "HEROE-FORM": {
+                "TITLE_EDIT": "Edit Hero",
+                "TITLE_ADD": "Add New Hero",
+                "FIELD_NAME": "Hero Name",
+                "PLACEHOLDER_NAME": "E.g. SPIDERMAN",
+                "ERROR_NAME_REQUIRED": "Name is required",
+                "ERROR_NAME_MINLENGTH": "Name must be at least 2 characters",
+                "FIELD_ALIAS": "Alias",
+                "PLACEHOLDER_ALIAS": "E.g. Peter Parker",
+                "ERROR_ALIAS_REQUIRED": "Alias is required",
+                "FIELD_POWER": "Power",
+                "PLACEHOLDER_POWER": "E.g. Spider Sense",
+                "ERROR_POWER_REQUIRED": "Power type is required",
+                "FIELD_AGE": "Age",
+                "PLACEHOLDER_AGE": "E.g. 25",
+                "ERROR_AGE_REQUIRED": "Age is required",
+                "ERROR_AGE_MIN": "Age must be at least 10",
+                "ERROR_AGE_MAX": "Age must be at most 100",
+                "CANCEL": "Cancel",
+                "SAVE": "Save"
+            }
+        }
+    },
+    "SHARED": {
+        "CONFIRM_DIALOG": {
+            "TITLE": "Confirm action",
+            "CANCEL": "Cancel",
+            "CONFIRM": "Confirm",
+            "DELETE_MESSAGE": "Are you sure you want to delete {{ name }}?"
+        },
+        "SNACKBAR": {
+            "CREATE_SUCCESS": "Hero created successfully",
+            "CREATE_ERROR": "Error creating hero",
+            "UPDATE_SUCCESS": "Hero updated successfully",
+            "UPDATE_ERROR": "Error updating hero",
+            "DELETE_SUCCESS": "Hero deleted successfully",
+            "DELETE_ERROR": "Error deleting hero",
+            "CLOSE": "Close"
+        }
+    }
+}
