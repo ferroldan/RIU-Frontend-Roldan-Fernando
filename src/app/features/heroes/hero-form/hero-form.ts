@@ -10,6 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { TranslateModule } from '@ngx-translate/core';
+import { UppercaseInputDirective } from '../../../shared/directives/uppercase-input.directive';
 
 @Component({
   selector: 'app-hero-form',
@@ -21,7 +22,8 @@ import { TranslateModule } from '@ngx-translate/core';
     MatButtonModule,
     MatIconModule,
     MatCardModule,
-    TranslateModule
+    TranslateModule,
+    UppercaseInputDirective
   ],
   templateUrl: './hero-form.html',
   styleUrl: './hero-form.scss',

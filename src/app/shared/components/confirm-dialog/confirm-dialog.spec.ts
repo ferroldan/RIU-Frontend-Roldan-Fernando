@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ConfirmDialogComponent } from './confirm-dialog.component';
+import { ConfirmDialogComponent } from './confirm-dialog';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { of } from 'rxjs';

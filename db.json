@@ -69,13 +69,6 @@
       "alias": "Barry Allen",
       "power": "Velocidad extrema",
       "age": 27
-    },
-    {
-      "name": "test",
-      "alias": "test",
-      "power": "test",
-      "age": 12,
-      "id": 11
     }
   ]
 }

@@ -8,7 +8,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { HeroService } from '../../../core/services/hero/hero.service';
 import { Hero } from '../../../shared/interfaces/hero.interface';
 import { PageEvent } from '@angular/material/paginator';
-import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
