@@ -30,25 +30,27 @@ describe('HeroService', () => {
       expect(response.data).toEqual(mockHeroes);
       expect(response.total).toBe(1);
     });
-    const req = httpTestingController.expectOne('/api/heroes?page=0&size=10');
+
+    const req = httpTestingController.expectOne('http://localhost:3001/heroes');
     expect(req.request.method).toBe('GET');
-    req.flush({ data: mockHeroes, total: 1 });
+    req.flush(mockHeroes);
   });
 
   it('should return hero by name via query parameter', () => {
-    service.getHeroes('Spider', 1, 5).subscribe((response: PaginationResponse<Hero>) => {
+    service.getHeroes('Spider', 0, 5).subscribe((response: PaginationResponse<Hero>) => {
       expect(response.data).toEqual(mockHeroes);
     });
-    const req = httpTestingController.expectOne('/api/heroes?name=Spider&page=1&size=5');
+
+    const req = httpTestingController.expectOne('http://localhost:3001/heroes?name_like=Spider');
     expect(req.request.method).toBe('GET');
-    req.flush({ data: mockHeroes, total: 1 });
+    req.flush(mockHeroes);
   });
 
   it('should return a hero by id', () => {
     service.getHeroById(1).subscribe(hero => {
       expect(hero).toEqual(mockHeroes[0]);
     });
-    const req = httpTestingController.expectOne('/api/heroes/1');
+    const req = httpTestingController.expectOne('http://localhost:3001/heroes/1');
     expect(req.request.method).toBe('GET');
     req.flush(mockHeroes[0]);
   });
@@ -60,7 +62,7 @@ describe('HeroService', () => {
     service.createHero(newHero).subscribe(hero => {
       expect(hero).toEqual(savedHero);
     });
-    const req = httpTestingController.expectOne('/api/heroes');
+    const req = httpTestingController.expectOne('http://localhost:3001/heroes');
     expect(req.request.method).toBe('POST');
     req.flush(savedHero);
   });
@@ -72,7 +74,7 @@ describe('HeroService', () => {
     service.updateHero(1, updateHero).subscribe(hero => {
       expect(hero).toEqual(updatedHero);
     });
-    const req = httpTestingController.expectOne('/api/heroes/1');
+    const req = httpTestingController.expectOne('http://localhost:3001/heroes/1');
     expect(req.request.method).toBe('PUT');
     req.flush(updatedHero);
   });
@@ -81,7 +83,7 @@ describe('HeroService', () => {
     service.deleteHero(1).subscribe(res => {
       expect(res).toBeNull();
     });
-    const req = httpTestingController.expectOne('/api/heroes/1');
+    const req = httpTestingController.expectOne('http://localhost:3001/heroes/1');
     expect(req.request.method).toBe('DELETE');
     req.flush(null);
   });
