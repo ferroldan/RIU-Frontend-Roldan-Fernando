@@ -53,7 +53,7 @@ export class HeroForm {
     }
   }
 
-  searchHeroById(id: number) {
+  searchHeroById(id: number): void {
     this.heroService.getHeroById(id)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -62,7 +62,7 @@ export class HeroForm {
       });
   }
 
-  onSubmit() {
+  onSubmit(): void {
     if (this.heroForm.invalid) {
       this.heroForm.markAllAsTouched();
       return;
@@ -80,7 +80,7 @@ export class HeroForm {
     }
   }
 
-  onCancel() {
+  onCancel(): void {
     this.router.navigate(['/heroes']);
   }
 

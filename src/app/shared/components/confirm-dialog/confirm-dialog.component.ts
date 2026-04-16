@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
@@ -16,17 +16,18 @@ import { TranslateModule } from '@ngx-translate/core';
       <button mat-button (click)="onCancel()">{{ 'SHARED.CONFIRM_DIALOG.CANCEL' | translate }}</button>
       <button mat-raised-button color="warn" (click)="onConfirm()">{{ 'SHARED.CONFIRM_DIALOG.CONFIRM' | translate }}</button>
     </mat-dialog-actions>
-  `
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ConfirmDialogComponent {
   readonly dialogRef = inject(MatDialogRef<ConfirmDialogComponent>);
   readonly data = inject<{ message: string }>(MAT_DIALOG_DATA);
 
-  onCancel() {
+  onCancel(): void {
     this.dialogRef.close(false);
   }
 
-  onConfirm() {
+  onConfirm(): void {
     this.dialogRef.close(true);
   }
 }
