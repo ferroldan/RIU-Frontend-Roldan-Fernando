@@ -55,6 +55,7 @@
             "UPDATE_ERROR": "Error al actualizar el héroe",
             "DELETE_SUCCESS": "Héroe eliminado exitosamente",
             "DELETE_ERROR": "Error al eliminar el héroe",
+            "LOAD_ERROR": "Error al cargar los héroes",
             "CLOSE": "Cerrar"
         }
     }

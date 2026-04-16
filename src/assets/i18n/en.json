@@ -55,6 +55,7 @@
             "UPDATE_ERROR": "Error updating hero",
             "DELETE_SUCCESS": "Hero deleted successfully",
             "DELETE_ERROR": "Error deleting hero",
+            "LOAD_ERROR": "Error loading heroes",
             "CLOSE": "Close"
         }
     }
