@@ -26,16 +26,13 @@ import { TranslateModule } from '@ngx-translate/core';
 export class HeroSearch {
   readonly searchChange = output<string>();
   readonly addHero = output<void>();
-  readonly searchControl = new FormControl('');
+  readonly searchControl = new FormControl('', { nonNullable: true });
 
   constructor() {
     this.searchControl.valueChanges.pipe(
       debounceTime(300),
       distinctUntilChanged(),
       takeUntilDestroyed()
-      ).subscribe(value => {
-        this.searchChange.emit(value ?? '');
-      }
-    )
+    ).subscribe(value => this.searchChange.emit(value));
   }
 }

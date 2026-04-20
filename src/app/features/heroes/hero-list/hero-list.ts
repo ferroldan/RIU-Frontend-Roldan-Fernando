@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, inject, signal, DestroyRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal, DestroyRef, computed } from '@angular/core';
 import { HeroSearch } from "./hero-search/hero-search";
 import { HeroTable } from "./hero-table/hero-table";
 import { Pagination } from "../../../shared/components/pagination/pagination";
@@ -10,8 +10,8 @@ import { PageEvent } from '@angular/material/paginator';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { filter, switchMap } from 'rxjs';
+import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { catchError, combineLatest, EMPTY, filter, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-hero-list',
@@ -21,7 +21,7 @@ import { filter, switchMap } from 'rxjs';
   styleUrl: './hero-list.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HeroList implements OnInit {
+export class HeroList {
   private readonly router = inject(Router);
   private readonly heroService = inject(HeroService);
   private readonly dialog = inject(MatDialog);
@@ -29,35 +29,46 @@ export class HeroList implements OnInit {
   private readonly snackBar = inject(MatSnackBar);
   private readonly destroyRef = inject(DestroyRef);
 
-  readonly heroes = signal<Hero[]>([]);
-  readonly totalHeroes = signal<number>(0);
+  readonly heroes = computed(() => this.heroesResponse().data);
+  readonly totalHeroes = computed(() => this.heroesResponse().total);
   readonly currentPageIndex = signal<number>(0);
   readonly currentPageSize = signal<number>(5);
+  readonly currentSearch = signal('');
+  readonly refreshPage = signal(0);
 
-  private currentSearch = '';
-
-  ngOnInit(): void {
-    this.loadHeroes();
-  }
-
-  loadHeroes(name?: string, pageIndex: number = 0, pageSize: number = 5): void {
-    this.heroService.getHeroes(name, pageIndex, pageSize)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (response) => {
-          this.heroes.set(response.data);
-          this.totalHeroes.set(response.total);
-        },
-        error: () => {
-          this.snackBar.open(this.translate.instant('SHARED.SNACKBAR.LOAD_ERROR'), this.translate.instant('SHARED.SNACKBAR.CLOSE'), { duration: 3000 });
-        }
-      });
-  }
+  private readonly heroesResponse = toSignal(
+    combineLatest([
+      toObservable(this.currentSearch),
+      toObservable(this.currentPageIndex),
+      toObservable(this.currentPageSize),
+      toObservable(this.refreshPage)
+    ]).pipe(
+      switchMap(([search, pageIndex, pageSize]) =>
+        this.heroService.getHeroes(search, pageIndex, pageSize).pipe(
+          tap(response => {
+            if (!response.data.length && pageIndex > 0) {
+              this.currentPageIndex.update(v => v - 1);
+            }
+          }),
+          filter(response => response.data.length > 0 || pageIndex === 0),
+          catchError(() => {
+            this.showLoadError();
+            return EMPTY;
+          })
+        )
+      )
+    ),
+    {
+      initialValue: {
+        data: [],
+        total: 0
+      }
+    }
+  );
 
   searchHeroes(query: string): void {
-    this.currentSearch = query;
+    this.currentSearch.set(query);
     this.currentPageIndex.set(0);
-    this.loadHeroes(query, 0, this.currentPageSize());
   }
 
   addHero(): void {
@@ -71,7 +82,6 @@ export class HeroList implements OnInit {
   onPageChange(event: PageEvent): void {
     this.currentPageIndex.set(event.pageIndex);
     this.currentPageSize.set(event.pageSize);
-    this.loadHeroes(this.currentSearch, event.pageIndex, event.pageSize);
   }
 
   deleteHero(hero: Hero): void {
@@ -85,21 +95,20 @@ export class HeroList implements OnInit {
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: () => {
-        let targetPage = this.currentPageIndex();
-        const pageSize = this.currentPageSize();
-        const currentTotal = this.totalHeroes();
-
-        if (currentTotal > 0 && currentTotal % pageSize === 1 && targetPage > 0) {
-          targetPage--;
-          this.currentPageIndex.set(targetPage);
-        }
-
         this.snackBar.open(this.translate.instant('SHARED.SNACKBAR.DELETE_SUCCESS'), this.translate.instant('SHARED.SNACKBAR.CLOSE'), { duration: 3000 });
-        this.loadHeroes(this.currentSearch, targetPage, pageSize);
+        this.refreshPage.update(v => v + 1);
       },
       error: () => {
         this.snackBar.open(this.translate.instant('SHARED.SNACKBAR.DELETE_ERROR'), this.translate.instant('SHARED.SNACKBAR.CLOSE'), { duration: 3000 });
       }
     });
+  }
+
+  private showLoadError(): void {
+    this.snackBar.open(
+      this.translate.instant('SHARED.SNACKBAR.LOAD_ERROR'),
+      this.translate.instant('SHARED.SNACKBAR.CLOSE'),
+      { duration: 3000 }
+    );
   }
 }
