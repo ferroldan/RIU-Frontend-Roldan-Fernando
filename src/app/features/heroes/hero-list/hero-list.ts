@@ -1,16 +1,16 @@
-import { Component, ChangeDetectionStrategy, OnInit, inject, OnDestroy, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, inject, signal, DestroyRef } from '@angular/core';
 import { HeroSearch } from "./hero-search/hero-search";
 import { HeroTable } from "./hero-table/hero-table";
 import { Pagination } from "../../../shared/components/pagination/pagination";
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { Subject, takeUntil } from 'rxjs';
 import { HeroService } from '../../../core/services/hero/hero.service';
 import { Hero } from '../../../shared/interfaces/hero.interface';
 import { PageEvent } from '@angular/material/paginator';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-hero-list',
@@ -20,20 +20,19 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrl: './hero-list.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HeroList implements OnInit, OnDestroy {
+export class HeroList implements OnInit {
   private readonly router = inject(Router);
   private readonly heroService = inject(HeroService);
   private readonly dialog = inject(MatDialog);
   private readonly translate = inject(TranslateService);
   private readonly snackBar = inject(MatSnackBar);
-
-  readonly destroy$ = new Subject<void>();
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly heroes = signal<Hero[]>([]);
   readonly totalHeroes = signal<number>(0);
   readonly currentPageIndex = signal<number>(0);
   readonly currentPageSize = signal<number>(5);
-  
+
   private currentSearch = '';
 
   ngOnInit(): void {
@@ -42,7 +41,7 @@ export class HeroList implements OnInit, OnDestroy {
 
   loadHeroes(name?: string, pageIndex: number = 0, pageSize: number = 5): void {
     this.heroService.getHeroes(name, pageIndex, pageSize)
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
           this.heroes.set(response.data);
@@ -79,9 +78,9 @@ export class HeroList implements OnInit, OnDestroy {
       data: { message: this.translate.instant('SHARED.CONFIRM_DIALOG.DELETE_MESSAGE', { name: hero.name }) }
     });
 
-    dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe(result => {
+    dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(result => {
       if (result) {
-        this.heroService.deleteHero(hero.id).pipe(takeUntil(this.destroy$)).subscribe({
+        this.heroService.deleteHero(hero.id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
           next: () => {
             let targetPage = this.currentPageIndex();
             const pageSize = this.currentPageSize();
@@ -101,10 +100,5 @@ export class HeroList implements OnInit, OnDestroy {
         });
       }
     });
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.unsubscribe();
   }
 }
