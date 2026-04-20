@@ -41,11 +41,12 @@ export class HeroForm {
 
   readonly heroId = signal<number | null>(null);
   readonly isEditMode = signal<boolean>(false);
-  readonly heroForm = this.formBuilder.group({
+
+  readonly heroForm = this.formBuilder.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
     alias: ['', [Validators.required]],
     power: ['', [Validators.required]],
-    age: this.formBuilder.nonNullable.control<number>(0, [Validators.required, Validators.min(10), Validators.max(100)])
+    age: [0, [Validators.required, Validators.min(10), Validators.max(100)]]
   });
 
   constructor() {
@@ -71,10 +72,10 @@ export class HeroForm {
       this.heroForm.markAllAsTouched();
       return;
     }
-    const formValue = this.heroForm.value as Partial<Hero>;
+    const formValue = this.heroForm.getRawValue();
 
     if (this.isEditMode() && this.heroId()) {
-      this.heroService.updateHero(this.heroId() as number, formValue)
+      this.heroService.updateHero(this.heroId()!, formValue)
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
           next: () => {
