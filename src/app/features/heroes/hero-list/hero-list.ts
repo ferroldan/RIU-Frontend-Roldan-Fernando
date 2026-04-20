@@ -11,7 +11,7 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
 import { TranslateService } from '@ngx-translate/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { catchError, combineLatest, EMPTY, filter, switchMap, tap } from 'rxjs';
+import { catchError, EMPTY, filter, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-hero-list',
@@ -31,23 +31,24 @@ export class HeroList {
 
   readonly heroes = computed(() => this.heroesResponse().data);
   readonly totalHeroes = computed(() => this.heroesResponse().total);
-  readonly currentPageIndex = signal<number>(0);
-  readonly currentPageSize = signal<number>(5);
-  readonly currentSearch = signal('');
-  readonly refreshPage = signal(0);
+  readonly queryState = signal({
+    search: '',
+    pageIndex: 0,
+    pageSize: 5,
+    refresh: 0
+  });
+
 
   private readonly heroesResponse = toSignal(
-    combineLatest([
-      toObservable(this.currentSearch),
-      toObservable(this.currentPageIndex),
-      toObservable(this.currentPageSize),
-      toObservable(this.refreshPage)
-    ]).pipe(
-      switchMap(([search, pageIndex, pageSize]) =>
+    toObservable(this.queryState).pipe(
+      switchMap(({ search, pageIndex, pageSize }) =>
         this.heroService.getHeroes(search, pageIndex, pageSize).pipe(
           tap(response => {
             if (!response.data.length && pageIndex > 0) {
-              this.currentPageIndex.update(v => v - 1);
+              this.queryState.update(state => ({
+                ...state,
+                pageIndex: state.pageIndex - 1
+              }));
             }
           }),
           filter(response => response.data.length > 0 || pageIndex === 0),
@@ -67,8 +68,11 @@ export class HeroList {
   );
 
   searchHeroes(query: string): void {
-    this.currentSearch.set(query);
-    this.currentPageIndex.set(0);
+    this.queryState.update(state => ({
+      ...state,
+      search: query,
+      pageIndex: 0
+    }));
   }
 
   addHero(): void {
@@ -80,8 +84,11 @@ export class HeroList {
   }
 
   onPageChange(event: PageEvent): void {
-    this.currentPageIndex.set(event.pageIndex);
-    this.currentPageSize.set(event.pageSize);
+    this.queryState.update(state => ({
+      ...state,
+      pageIndex: event.pageIndex,
+      pageSize: event.pageSize
+    }));
   }
 
   deleteHero(hero: Hero): void {
@@ -96,7 +103,10 @@ export class HeroList {
     ).subscribe({
       next: () => {
         this.snackBar.open(this.translate.instant('SHARED.SNACKBAR.DELETE_SUCCESS'), this.translate.instant('SHARED.SNACKBAR.CLOSE'), { duration: 3000 });
-        this.refreshPage.update(v => v + 1);
+        this.queryState.update(state => ({
+          ...state,
+          refresh: state.refresh + 1
+        }));
       },
       error: () => {
         this.snackBar.open(this.translate.instant('SHARED.SNACKBAR.DELETE_ERROR'), this.translate.instant('SHARED.SNACKBAR.CLOSE'), { duration: 3000 });
