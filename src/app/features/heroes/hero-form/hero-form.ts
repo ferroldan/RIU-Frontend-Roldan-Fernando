@@ -1,8 +1,7 @@
-import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal, DestroyRef } from '@angular/core';
 import { HeroService } from '../../../core/services/hero/hero.service';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
 import { Hero } from '../../../shared/interfaces/hero.interface';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -12,6 +11,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { UppercaseInputDirective } from '../../../shared/directives/uppercase-input.directive';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-hero-form',
@@ -37,16 +37,16 @@ export class HeroForm {
   private route = inject(ActivatedRoute);
   private snackBar = inject(MatSnackBar);
   private translate = inject(TranslateService);
+  private readonly destroyRef = inject(DestroyRef);
 
-  private destroy$ = new Subject<boolean>();
-  
   readonly heroId = signal<number | null>(null);
   readonly isEditMode = signal<boolean>(false);
-  readonly heroForm = this.formBuilder.group({
+
+  readonly heroForm = this.formBuilder.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
     alias: ['', [Validators.required]],
     power: ['', [Validators.required]],
-    age: this.formBuilder.nonNullable.control<number>(0, [Validators.required, Validators.min(10), Validators.max(100)])
+    age: [0, [Validators.required, Validators.min(10), Validators.max(100)]]
   });
 
   constructor() {
@@ -60,7 +60,7 @@ export class HeroForm {
 
   searchHeroById(id: number): void {
     this.heroService.getHeroById(id)
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (hero) => this.heroForm.patchValue(hero),
         error: () => this.router.navigate(['/heroes'])
@@ -72,11 +72,11 @@ export class HeroForm {
       this.heroForm.markAllAsTouched();
       return;
     }
-    const formValue = this.heroForm.value as Partial<Hero>;
+    const formValue = this.heroForm.getRawValue();
 
     if (this.isEditMode() && this.heroId()) {
-      this.heroService.updateHero(this.heroId() as number, formValue)
-        .pipe(takeUntil(this.destroy$))
+      this.heroService.updateHero(this.heroId()!, formValue)
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
           next: () => {
             this.snackBar.open(this.translate.instant('SHARED.SNACKBAR.UPDATE_SUCCESS'), this.translate.instant('SHARED.SNACKBAR.CLOSE'), { duration: 3000 });
@@ -88,7 +88,7 @@ export class HeroForm {
         });
     } else {
       this.heroService.createHero(formValue)
-        .pipe(takeUntil(this.destroy$))
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
           next: () => {
             this.snackBar.open(this.translate.instant('SHARED.SNACKBAR.CREATE_SUCCESS'), this.translate.instant('SHARED.SNACKBAR.CLOSE'), { duration: 3000 });
@@ -103,10 +103,5 @@ export class HeroForm {
 
   onCancel(): void {
     this.router.navigate(['/heroes']);
-  }
-
-  ngOnDestroy() {
-    this.destroy$.next(true);
-    this.destroy$.unsubscribe();
   }
 }

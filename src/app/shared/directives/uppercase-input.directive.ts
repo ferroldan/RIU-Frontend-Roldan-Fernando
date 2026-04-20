@@ -1,51 +1,20 @@
-import { Directive, ElementRef, HostListener, forwardRef, Renderer2, inject } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Directive, HostListener, inject, ElementRef } from '@angular/core';
 
 @Directive({
   selector: '[appUppercaseInput]',
-  standalone: true,
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => UppercaseInputDirective),
-      multi: true
-    }
-  ]
+  standalone: true
 })
-export class UppercaseInputDirective implements ControlValueAccessor {
-  private elementRef = inject(ElementRef);
-  private renderer = inject(Renderer2);
+export class UppercaseInputDirective {
+  private readonly elementRef = inject(ElementRef<HTMLInputElement>);
 
-  onChange = (value: any) => {};
-  onTouched = () => {};
+  @HostListener('input')
+  onInput(): void {
+    const input = this.elementRef.nativeElement;
+    const transformed = input.value.toUpperCase();
 
-  writeValue(value: any): void {
-    const formatted = value ? value.toUpperCase() : '';
-    this.renderer.setProperty(this.elementRef.nativeElement, 'value', formatted);
-  }
+    if (input.value === transformed) return;
 
-  registerOnChange(fn: any): void {
-    this.onChange = fn;
-  }
-
-  registerOnTouched(fn: any): void {
-    this.onTouched = fn;
-  }
-
-  setDisabledState?(isDisabled: boolean): void {
-    this.renderer.setProperty(this.elementRef.nativeElement, 'disabled', isDisabled);
-  }
-
-  @HostListener('input', ['$event'])
-  onInput(event: Event) {
-    const input = event.target as HTMLInputElement;
-    const value = input.value.toUpperCase();
-    this.renderer.setProperty(input, 'value', value);
-    this.onChange(value);
-  }
-
-  @HostListener('blur')
-  onBlur() {
-    this.onTouched();
+    input.value = transformed;
+    input.dispatchEvent(new Event('input', { bubbles: true }));
   }
 }

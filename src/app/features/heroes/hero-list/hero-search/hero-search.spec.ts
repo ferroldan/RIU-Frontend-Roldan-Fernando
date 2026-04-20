@@ -38,11 +38,13 @@ describe('HeroSearch', () => {
     expect(emittedValue).toBe('Spider');
   }));
 
-  it('should emit empty string when value is null', fakeAsync(() => {
+  it('should emit empty string when value is cleared', fakeAsync(() => {
     let emittedValue: string | undefined;
     component.searchChange.subscribe(v => (emittedValue = v));
 
-    component.searchControl.setValue(null);
+    component.searchControl.setValue('Spider');
+    tick(300);
+    component.searchControl.setValue('');
     tick(300);
 
     expect(emittedValue).toBe('');

@@ -10,9 +10,9 @@
     </app-hero-table>
     <app-pagination
         [length]="totalHeroes()"
-        [pageSize]="currentPageSize()"
+        [pageSize]="queryState().pageSize"
         [pageSizeOptions]="[5, 10, 20]"
-        [pageIndex]="currentPageIndex()"
+        [pageIndex]="queryState().pageIndex"
         (pageChange)="onPageChange($event)">
     </app-pagination>
 </div>

@@ -45,7 +45,7 @@ describe('HeroList', () => {
         { provide: MatSnackBar, useValue: mockSnackBar }
       ]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(HeroList);
     component = fixture.componentInstance;
@@ -59,19 +59,27 @@ describe('HeroList', () => {
 
   it('should create and load heroes initially', () => {
     expect(component).toBeTruthy();
-    expect(mockHeroService.getHeroes).toHaveBeenCalledWith(undefined, 0, 5);
+    expect(mockHeroService.getHeroes).toHaveBeenCalledWith('', 0, 5);
     expect(component.heroes()).toEqual(mockHeroes);
+  });
+
+  it('should display error snackbar if loadHeroes fails', () => {
+    mockHeroService.getHeroes.and.returnValue(throwError(() => new Error('Load failed')));
+    component.queryState.update(state => ({ ...state, refresh: state.refresh + 1 }));
+    fixture.detectChanges();
+    expect(mockSnackBar.open).toHaveBeenCalled();
   });
 
   it('should load heroes with the search term when onSearchChange is called', () => {
     component.searchHeroes('Spider');
+    fixture.detectChanges();
     expect(mockHeroService.getHeroes).toHaveBeenCalledWith('Spider', 0, 5);
   });
 
   it('should reset currentPageIndex to 0 when onSearchChange is called', () => {
-    component.currentPageIndex.set(2);
+    component.queryState.update(state => ({ ...state, pageIndex: 2 }));
     component.searchHeroes('Spider');
-    expect(component.currentPageIndex()).toBe(0);
+    expect(component.queryState().pageIndex).toBe(0);
   });
 
   it('should navigate to add hero page', () => {
@@ -88,6 +96,7 @@ describe('HeroList', () => {
     component.deleteHero(mockHeroes[0]);
     expect(mockDialog.open).toHaveBeenCalled();
     expect(mockHeroService.deleteHero).toHaveBeenCalledWith(1);
+    fixture.detectChanges();
     expect(mockHeroService.getHeroes).toHaveBeenCalledTimes(2);
     expect(mockSnackBar.open).toHaveBeenCalled();
   });
@@ -108,41 +117,38 @@ describe('HeroList', () => {
 
   it('should update currentPageIndex and currentPageSize on page change', () => {
     component.onPageChange({ pageIndex: 1, pageSize: 10, length: 50 } as any);
-    expect(component.currentPageIndex()).toBe(1);
-    expect(component.currentPageSize()).toBe(10);
+    fixture.detectChanges();
+    expect(component.queryState().pageIndex).toBe(1);
+    expect(component.queryState().pageSize).toBe(10);
     expect(mockHeroService.getHeroes).toHaveBeenCalledWith('', 1, 10);
   });
 
   it('should use currentSearch when loading after a page change', () => {
     component.searchHeroes('Spider');
+    fixture.detectChanges();
     component.onPageChange({ pageIndex: 2, pageSize: 20, length: 100 } as any);
+    fixture.detectChanges();
     expect(mockHeroService.getHeroes).toHaveBeenCalledWith('Spider', 2, 20);
   });
 
-  it('should decrement page index if deleting the last hero on the current page', () => {
-    component.currentPageIndex.set(1);
-    component.currentPageSize.set(5);
-    component.totalHeroes.set(6);
-
-    component.deleteHero(mockHeroes[0]);
-
-    expect(component.currentPageIndex()).toBe(0);
-    expect(mockHeroService.getHeroes).toHaveBeenCalledWith('', 0, 5);
+  it('should decrement page index if empty page is loaded and page > 0', () => {
+    mockHeroService.getHeroes.and.returnValue(of({ data: [], total: 5 }));
+    component.queryState.update(state => ({ ...state, pageIndex: 1 }));
+    fixture.detectChanges();
+    expect(component.queryState().pageIndex).toBe(0);
   });
 
   it('should not decrement page index when already on the first page', () => {
-    component.currentPageIndex.set(0);
-    component.currentPageSize.set(5);
-    component.totalHeroes.set(1);
-
+    component.queryState.update(state => ({ ...state, pageIndex: 0 }));
     component.deleteHero(mockHeroes[0]);
-
-    expect(component.currentPageIndex()).toBe(0);
+    fixture.detectChanges();
+    expect(component.queryState().pageIndex).toBe(0);
   });
 
   it('should load heroes with currentSearch when page size is current value', () => {
-    component.currentPageSize.set(10);
+    component.queryState.update(state => ({ ...state, pageSize: 10 }));
     component.searchHeroes('Batman');
+    fixture.detectChanges();
     expect(mockHeroService.getHeroes).toHaveBeenCalledWith('Batman', 0, 10);
   });
 });
