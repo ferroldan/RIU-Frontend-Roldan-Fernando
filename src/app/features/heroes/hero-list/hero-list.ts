@@ -11,6 +11,7 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
 import { TranslateService } from '@ngx-translate/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { filter, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-hero-list',
@@ -78,26 +79,26 @@ export class HeroList implements OnInit {
       data: { message: this.translate.instant('SHARED.CONFIRM_DIALOG.DELETE_MESSAGE', { name: hero.name }) }
     });
 
-    dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(result => {
-      if (result) {
-        this.heroService.deleteHero(hero.id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-          next: () => {
-            let targetPage = this.currentPageIndex();
-            const pageSize = this.currentPageSize();
-            const currentTotal = this.totalHeroes();
+    dialogRef.afterClosed().pipe(
+      filter(Boolean),
+      switchMap(() => this.heroService.deleteHero(hero.id)),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
+      next: () => {
+        let targetPage = this.currentPageIndex();
+        const pageSize = this.currentPageSize();
+        const currentTotal = this.totalHeroes();
 
-            if (currentTotal > 0 && currentTotal % pageSize === 1 && targetPage > 0) {
-              targetPage--;
-              this.currentPageIndex.set(targetPage);
-            }
+        if (currentTotal > 0 && currentTotal % pageSize === 1 && targetPage > 0) {
+          targetPage--;
+          this.currentPageIndex.set(targetPage);
+        }
 
-            this.snackBar.open(this.translate.instant('SHARED.SNACKBAR.DELETE_SUCCESS'), this.translate.instant('SHARED.SNACKBAR.CLOSE'), { duration: 3000 });
-            this.loadHeroes(this.currentSearch, targetPage, pageSize);
-          },
-          error: () => {
-            this.snackBar.open(this.translate.instant('SHARED.SNACKBAR.DELETE_ERROR'), this.translate.instant('SHARED.SNACKBAR.CLOSE'), { duration: 3000 });
-          }
-        });
+        this.snackBar.open(this.translate.instant('SHARED.SNACKBAR.DELETE_SUCCESS'), this.translate.instant('SHARED.SNACKBAR.CLOSE'), { duration: 3000 });
+        this.loadHeroes(this.currentSearch, targetPage, pageSize);
+      },
+      error: () => {
+        this.snackBar.open(this.translate.instant('SHARED.SNACKBAR.DELETE_ERROR'), this.translate.instant('SHARED.SNACKBAR.CLOSE'), { duration: 3000 });
       }
     });
   }

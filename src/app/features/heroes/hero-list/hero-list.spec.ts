@@ -63,6 +63,12 @@ describe('HeroList', () => {
     expect(component.heroes()).toEqual(mockHeroes);
   });
 
+  it('should display error snackbar if loadHeroes fails', () => {
+    mockHeroService.getHeroes.and.returnValue(throwError(() => new Error('Load failed')));
+    component.loadHeroes();
+    expect(mockSnackBar.open).toHaveBeenCalled();
+  });
+
   it('should load heroes with the search term when onSearchChange is called', () => {
     component.searchHeroes('Spider');
     expect(mockHeroService.getHeroes).toHaveBeenCalledWith('Spider', 0, 5);
